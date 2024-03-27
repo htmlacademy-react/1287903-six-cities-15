@@ -3,6 +3,8 @@ import Logo from '../../components/logo/logo';
 import { Helmet } from 'react-helmet-async';
 import { Offers } from '../../types/offers';
 import {useState} from 'react';
+import Map from '../../components/map/map.tsx';
+import { city } from '../../mocks/city';
 
 type MainPageProps ={
   placesCount : number;
@@ -121,7 +123,7 @@ function MainPage({ placesCount, offers }: MainPageProps): JSX.Element {
               </div>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map">{cardHoverId}</section>
+              <Map offers={offers} cardHoverId={cardHoverId} city={city} />
             </div>
           </div>
         </div>
