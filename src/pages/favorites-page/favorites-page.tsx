@@ -1,5 +1,5 @@
-import Logo from '../../components/logo/logo';
 import { Helmet } from 'react-helmet-async';
+import Logo from '../../components/logo/logo';
 import { Offers } from '../../types/offers';
 import { handleStars } from '../../const';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,7 @@ type FavoritesPageProps = {
   offers: Offers;
 }
 
-function FavoritesPage({ offers }: FavoritesPageProps): JSX.Element {
+function FavotitesPage({ offers }: FavoritesPageProps): JSX.Element {
   const favoriteCards = offers.filter((offer) => offer.isFavorite === true);
 
   return (
@@ -64,13 +64,17 @@ function FavoritesPage({ offers }: FavoritesPageProps): JSX.Element {
                     </div>
                     <div className="favorites__places">
                       <article className="favorites__card place-card">
-
                         {card.isPremium === true && <div className="place-card__mark"><span>Premium</span></div>}
-
                         <div className="favorites__image-wrapper place-card__image-wrapper">
-                          <a href="#">
-                            <img className="place-card__image" src={card.images[0]} width="150" height="110" alt="Place image" />
-                          </a>
+                          <Link to={`/offer/${card.id}`}>
+                            <img
+                              className="place-card__image"
+                              src={card.previewImage}
+                              width="150"
+                              height="110"
+                              alt="Place image"
+                            />
+                          </Link>
                         </div>
                         <div className="favorites__card-info place-card__info">
                           <div className="place-card__price-wrapper">
@@ -92,7 +96,7 @@ function FavoritesPage({ offers }: FavoritesPageProps): JSX.Element {
                             </div>
                           </div>
                           <h2 className="place-card__name">
-                            <a href="#">{card.title}</a>
+                            <Link to={`/offer/${card.id}`}>{card.title}</Link>
                           </h2>
                           <p className="place-card__type">{card.type}</p>
                         </div>
@@ -122,4 +126,4 @@ function FavoritesPage({ offers }: FavoritesPageProps): JSX.Element {
   );
 }
 
-export default FavoritesPage;
+export default FavotitesPage;
