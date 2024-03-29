@@ -23,7 +23,7 @@ export type Offer = {
   bedrooms: number;
   goods: string[];
   host: {
-  name: string;
+  hostName: string;
   avatarUrl: string;
   isPro: boolean;
   };

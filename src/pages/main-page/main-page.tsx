@@ -123,7 +123,7 @@ function MainPage({ placesCount, offers }: MainPageProps): JSX.Element {
               </div>
             </section>
             <div className="cities__right-section">
-              <Map offers={offers} cardHoverId={cardHoverId} city={city} />
+              <Map mapType={'cities'} offers={offers} cardHoverId={cardHoverId} city={city} />
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ function PlaceCardList({ offerList, setCardHoverId }: PlaceCardListProps): JSX.E
       {offerList.map((offer) => {
         const keyValue = offer.id;
         return (
-          <PlaceCard key={keyValue} offerCard={offer} setCardHoverId={setCardHoverId} />
+          <PlaceCard placeType={'cities'} key={keyValue} offerCard={offer} setCardHoverId={setCardHoverId} />
         );
       })}
     </div>

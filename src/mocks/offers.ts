@@ -31,7 +31,7 @@ export const offers: Offers = [
       'Dryer'
     ],
     host: {
-      name: 'Alex',
+      hostName: 'Alex',
       isPro: false,
       avatarUrl: 'https://i.pravatar.cc/120'
     },
@@ -74,7 +74,7 @@ export const offers: Offers = [
       zoom: 8
     },
     host: {
-      name: 'John',
+      hostName: 'John',
       isPro: true,
       avatarUrl: 'https://i.pravatar.cc/121'
     },
@@ -119,7 +119,7 @@ export const offers: Offers = [
       zoom: 8
     },
     host: {
-      name: 'Ann',
+      hostName: 'Ann',
       isPro: true,
       avatarUrl: 'https://i.pravatar.cc/126'
     },
@@ -161,7 +161,7 @@ export const offers: Offers = [
       zoom: 8
     },
     host: {
-      name: 'Bill',
+      hostName: 'Bill',
       isPro: false,
       avatarUrl: 'https://i.pravatar.cc/127'
     },
