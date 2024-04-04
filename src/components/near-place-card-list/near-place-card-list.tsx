@@ -5,7 +5,7 @@ type NearPlaceCardListProps = {
     offerList: Offers;
 }
 
-function NearPlaceCardList({ offerList}: NearPlaceCardListProps): JSX.Element {
+function NearPlaceCardList({ offerList }: NearPlaceCardListProps): JSX.Element {
 
   return (
     < >

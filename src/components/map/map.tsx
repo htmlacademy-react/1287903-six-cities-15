@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import useMap from '../hooks/use-map';
+import useMap from '../../hooks/use-map';
 import { URL_MARKER_DEFAULT, URL_MARKER_CURRENT } from '../../const';
 import { Offer, Offers } from '../../types/offers';
 import { CityMap } from '../../types/city-map';
@@ -43,6 +43,12 @@ function Map({ mapType, city, offers, cardHoverId }: MapProps) {
       });
     }
   }, [map, offers, cardHoverId]);
+
+  useEffect(() => {
+    if (map) {
+      map.setView([city.lat, city.lng], city.zoom);
+    }
+  }, [map, city]);
 
   return (
     <section

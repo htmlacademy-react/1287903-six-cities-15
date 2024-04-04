@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
+import { useAppSelector } from '../../hooks/index';
 import { Offers } from '../../types/offers';
-import { city } from '../../mocks/city';
 import { Reviews } from '../../types/reviews';
 import Logo from '../../components/logo/logo';
 import ReviewCardList from '../../components/review-card-list/review-card-list';
@@ -17,6 +17,7 @@ type OfferPageProps = {
 };
 
 function OfferPage({ offers, reviews }: OfferPageProps): JSX.Element {
+  const cityMapActive = useAppSelector((state) => state.city);
   const params = useParams();
   const cardId = params.id;
   const selectedCard = offers.filter((offer) => offer.id === cardId)[0];
@@ -154,7 +155,7 @@ function OfferPage({ offers, reviews }: OfferPageProps): JSX.Element {
               <ReviewForm />
             </div>
           </div>
-          <Map mapType={'offer'} offers={nearOfferPlusSelectedCard} cardHoverId={offerPage.id} city={city} />
+          <Map mapType={'offer'} offers={nearOfferPlusSelectedCard} cardHoverId={offerPage.id} city={cityMapActive} />
         </section>
         <div className="container">
           <section className="near-places places">

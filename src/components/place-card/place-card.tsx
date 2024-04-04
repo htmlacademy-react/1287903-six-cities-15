@@ -9,7 +9,7 @@ type PlaceCardProps = {
   setCardHoverId?(id: string | null): void;
 }
 
-function PlaceCard({ placeType,offerCard, setCardHoverId }: PlaceCardProps): JSX.Element {
+function PlaceCard({ placeType, offerCard, setCardHoverId }: PlaceCardProps): JSX.Element {
   const { title, price, type, isFavorite, id, isPremium, previewImage, rating } = offerCard;
   const [isFavoriteCard, setIsFavoriteCard] = useState(isFavorite);
 
@@ -22,10 +22,14 @@ function PlaceCard({ placeType,offerCard, setCardHoverId }: PlaceCardProps): JSX
   };
 
   return (
-    <article className={`${placeType}__card place-card`} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+    <article
+      className={`${placeType}__card place-card`}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+    >
       {isPremium && <div className="place-card__mark"><span>Premium</span></div>}
       <div className={`${placeType}__image-wrapper place-card__image-wrapper`}>
-        <Link to={`offer/${id}`}>
+        <Link to={`/offer/${id}`}>
           <img
             className="place-card__image"
             src={previewImage}
