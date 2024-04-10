@@ -21,6 +21,7 @@ function OfferPage({ offers, reviews }: OfferPageProps): JSX.Element {
   const params = useParams();
   const cardId = params.id;
   const selectedCard = offers.filter((offer) => offer.id === cardId)[0];
+
   const { title, type, images, isPremium, rating, bedrooms, maxAdults, price, isFavorite, host, goods, description } = selectedCard;
   const { hostName, isPro, avatarUrl } = host;
 
