@@ -11,7 +11,7 @@ type PlaceCardProps = {
 
 function PlaceCard({ placeType, offerCard, setCardHoverId }: PlaceCardProps): JSX.Element {
   const { title, price, type, isFavorite, id, isPremium, previewImage, rating } = offerCard;
-  const [isFavoriteCard, setIsFavoriteCard] = useState(isFavorite);
+  const [isFavoriteCard, setFavoriteCard] = useState(isFavorite);
 
   const handleMouseOver = () => {
     setCardHoverId?.(id);
@@ -20,6 +20,11 @@ function PlaceCard({ placeType, offerCard, setCardHoverId }: PlaceCardProps): JS
   const handleMouseOut = () => {
     setCardHoverId?.(null);
   };
+
+  const handleClick = () => {
+    setFavoriteCard(!isFavoriteCard);
+  };
+
 
   return (
     <article
@@ -45,7 +50,8 @@ function PlaceCard({ placeType, offerCard, setCardHoverId }: PlaceCardProps): JS
             <b className="place-card__price-value">€{price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
-          <button onClick={() => setIsFavoriteCard(!isFavoriteCard)}
+          <button
+            onClick={handleClick}
             className={`place-card__bookmark-button ${isFavoriteCard ? 'place-card__bookmark-button--active' : ''} button`}
             type="button"
           >

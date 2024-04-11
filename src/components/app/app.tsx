@@ -1,5 +1,5 @@
-import { Route, BrowserRouter, Routes } from 'react-router-dom';
-import {useAppSelector} from '../../hooks';
+import { Route, Routes } from 'react-router-dom';
+import { useAppSelector } from '../../hooks';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import MainPage from '../../pages/main-page/main-page';
 import FavoritesPage from '../../pages/favorites-page/favorites-page';
@@ -12,6 +12,8 @@ import { Offers } from '../../types/offers';
 import { Reviews } from '../../types/reviews';
 import ScrollToTop from '../scroll-to-top/scroll-to-top';
 import Spinner from '../spinner/spinner';
+import HistoryRouter from '../history-route/history-route';
+import browserHistory from '../../browser-history';
 
 type AppProps = {
   offers: Offers;
@@ -31,7 +33,7 @@ function App({ offers, reviews, citiesList }: AppProps): JSX.Element {
 
   return (
     <HelmetProvider>
-      <BrowserRouter>
+      <HistoryRouter history={browserHistory}>
         <ScrollToTop />
         <Routes>
           <Route
@@ -42,7 +44,7 @@ function App({ offers, reviews, citiesList }: AppProps): JSX.Element {
             path={AppRoute.Favorites}
             element={
               <PrivateRoute authorizationStatus={authorizationStatus}>
-                <FavoritesPage offers={offers} />
+                <FavoritesPage />
               </PrivateRoute>
             }
           />
@@ -59,7 +61,7 @@ function App({ offers, reviews, citiesList }: AppProps): JSX.Element {
             element={<NotFoundPage />}
           />
         </Routes>
-      </BrowserRouter>
+      </HistoryRouter>
     </HelmetProvider>
   );
 }
