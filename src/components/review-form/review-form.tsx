@@ -1,16 +1,25 @@
-import { useState, ChangeEvent, Fragment } from 'react';
+import { useState, ChangeEvent, Fragment, FormEvent } from 'react';
+import { useAppDispatch } from '../../hooks/index';
+import { submitCommentAction } from '../../store/api-actions';
 
-function ReviewForm(): JSX.Element {
+type ReviewFormProps = {
+  offerId?: string;
+};
+
+function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
+  const ratingReview = {
+    'perfect': '5',
+    'good': '4',
+    'not bad': '3',
+    'badly': '2',
+    'terribly': '1'
+  };
+
+  const dispatch = useAppDispatch();
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState('0');
 
-  const reviewRating = {
-    'fiveStars': '5',
-    'fourStars': '4',
-    'threeStars': '3',
-    'twoStars': '2',
-    'oneStar': '1'
-  };
+  const isDisabled = (comment.length < 50 || comment.length > 300 || rating === null);
 
   function handleInputChange(evt: ChangeEvent<HTMLInputElement>) {
     setRating(evt.target.value);
@@ -20,14 +29,40 @@ function ReviewForm(): JSX.Element {
     setComment(evt.target.value);
   }
 
+  const resetForm = () => {
+    setComment('');
+    setRating('0');
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (offerId && !isDisabled) {
+      dispatch(
+        submitCommentAction({
+          id: offerId,
+          comment: comment,
+          rating: Number(rating),
+        })
+      );
+
+      resetForm();
+    }
+  };
+
   return (
-    <form className="reviews__form form" action="#" method="post">
+    <form
+      className="reviews__form form"
+      action="#"
+      method="post"
+      onSubmit={handleSubmit}
+    >
       <label className="reviews__label form__label" htmlFor="review">
-                Your review
+        Your review
       </label>
       <div className="reviews__rating-form form__rating">
         {
-          Object.entries(reviewRating).map(([title, score]) => (
+          Object.entries(ratingReview).map(([title, score]) => (
             <Fragment key={score}>
               <input
                 className="form__rating-input visually-hidden"
@@ -43,14 +78,13 @@ function ReviewForm(): JSX.Element {
                 className="reviews__rating-label form__rating-label"
                 title={title}
               >
-                <svg className="form__star-image" width={37} height={33}>
-                  <use xlinkHref="#icon-star" />
+                <svg className="form__star-image" width="37" height="33">
+                  <use xlinkHref="#icon-star"></use>
                 </svg>
               </label>
             </Fragment>
           ))
         }
-
       </div>
       <textarea
         className="reviews__textarea form__textarea"
@@ -62,20 +96,20 @@ function ReviewForm(): JSX.Element {
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
-                    To submit review please make sure to set{' '}
-          <span className="reviews__star">rating</span> and describe your stay with
-                    at least <b className="reviews__text-amount">50 characters</b>.
+          To submit review please make sure to set{''}
+          <span className="reviews__star">rating</span> and describe
+          your stay with at least{''}
+          <b className="reviews__text-amount">50 characters</b>.
         </p>
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled
+          disabled={isDisabled}
         >
-                    Submit
+          Submit
         </button>
       </div>
     </form>
-
   );
 }
 

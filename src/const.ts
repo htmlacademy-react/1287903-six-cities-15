@@ -6,6 +6,7 @@ export enum AppRoute {
   Favorites = '/favorites',
   Main = '/',
   Offer = '/offer/:id',
+  NotFound = '*',
 }
 
 export const PRIVATE_ROUTES: readonly string[] = ['/favorites'];
