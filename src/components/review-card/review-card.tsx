@@ -7,7 +7,7 @@ type ReviewProps = {
 
 function ReviewCard({ reviewCard }: ReviewProps): JSX.Element {
   const { comment, user, rating, date } = reviewCard;
-  const { userName, avatarUrl } = user;
+  const { name, avatarUrl } = user;
   const dueDate = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' }).format(new Date(date.split('T')[0]));
 
   return (
@@ -23,7 +23,7 @@ function ReviewCard({ reviewCard }: ReviewProps): JSX.Element {
               alt="Reviews avatar"
             />
           </div>
-          <span className="reviews__user-name">{userName}</span>
+          <span className="reviews__user-name">{name}</span>
         </div>
         <div className="reviews__info">
           <div className="reviews__rating rating">

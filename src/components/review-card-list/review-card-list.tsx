@@ -3,6 +3,7 @@ import { Reviews } from '../../types/reviews';
 import ReviewForm from '../review-form/review-form';
 import { useAppSelector } from '../../hooks';
 import { AuthorizationStatus } from '../../const';
+import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 
 type ReviewCardListProps = {
   reviewList: Reviews;
@@ -15,7 +16,7 @@ function ReviewsList({ reviewList, offerId }: ReviewCardListProps): JSX.Element 
   const maxReviews = reviewList.slice(MIN_REVIEWS_COUNT, Math.min(MAX_REVIEWS_COUNT, reviewList.length))
     .sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
 
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
   return (
     <section className="offer__reviews reviews">

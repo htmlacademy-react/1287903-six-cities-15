@@ -1,0 +1,12 @@
+.offer__map {
+  height: 100%;
+  min-height: 500px;
+  width: 100%;
+  min-width: 1144px;
+  margin: 0, auto;
+}
+
+.cities__map,
+map {
+  height: 100%;
+}

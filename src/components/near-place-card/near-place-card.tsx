@@ -1,5 +1,6 @@
 import { Offer } from '../../types/offers';
 import PlaceCard from '../place-card/place-card';
+import { FavoritesUpdate } from '../../const';
 
 type NearPlaceCardProps = {
     offerCard: Offer;
@@ -7,7 +8,7 @@ type NearPlaceCardProps = {
 
 function NearPlaceCard({ offerCard }: NearPlaceCardProps): JSX.Element {
   return (
-    <PlaceCard placeType={'near-places'} offerCard={offerCard} />
+    <PlaceCard placeType={'near-places'} favoritesUpdate={FavoritesUpdate.NearOffers} offerCard={offerCard} />
   );
 }
 
