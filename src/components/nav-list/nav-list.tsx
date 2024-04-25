@@ -1,25 +1,24 @@
-
-import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
+import { NavLink, Link} from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../hooks/index';
-import { AuthorizationStatus, AppRoute, PRIVATE_ROUTES } from '../../const';
+import { AuthorizationStatus, AppRoute } from '../../const';
 import { logoutAction } from '../../store/api-actions';
+import { getAuthorizationStatus, getUser } from '../../store/user-process/user-process.selectors';
+import { getFavorites } from '../../store/favorites-process/favorites-process.selectors';
+import { setAuthorizationStatusByDefault } from '../../store/user-process/user-process.slice';
 
 function NavList(): JSX.Element {
-  const authorizationStatusLogged = useAppSelector((state) => state.authorizationStatus);
-  const user = useAppSelector((state) => state.user);
+  const authorizationStatusLogged = useAppSelector(getAuthorizationStatus);
+  const user = useAppSelector(getUser);
 
   const isLogged = authorizationStatusLogged === AuthorizationStatus.Auth;
 
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
+
+  const favoritesLength = useAppSelector(getFavorites).length;
 
   const handleClick = () => {
     dispatch(logoutAction());
-
-    if (PRIVATE_ROUTES.includes(pathname)) {
-      navigate(AppRoute.Main);
-    }
+    dispatch(setAuthorizationStatusByDefault());
   };
 
   return (
@@ -35,11 +34,12 @@ function NavList(): JSX.Element {
               <span className="header__user-name user__name">
                 {user?.email}
               </span>
-              <span className="header__favorite-count">3</span>
+              <span className="header__favorite-count">{favoritesLength}</span>
             </NavLink>
           </li>
           <li className="header__nav-link resetStyleButton">
-            <button className="header__nav-link"
+            <button
+              className="header__nav-link"
               onClick={handleClick}
             >
               <span className="header__signout">Sign out</span>
@@ -52,7 +52,6 @@ function NavList(): JSX.Element {
             <Link
               className="header__nav-link header__nav-link--profile"
               to={AppRoute.Login}
-              state={{ from: pathname }}
             >
               <div className="header__avatar-wrapper user__avatar-wrapper"></div>
               <span className="header__login">Sign in</span>

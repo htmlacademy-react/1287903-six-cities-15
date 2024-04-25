@@ -1,36 +1,37 @@
-import {useAppDispatch, useAppSelector} from '../../hooks/index';
-import {setCityActive, getOffers, setChangeMap} from '../../store/action';
-import {cityMap} from '../../const';
+import { useAppDispatch } from '../../hooks/index';
+import { setCityActive, setChangeMap, getOffers } from '../../store/offers-process/offers-process.slice';
+import { AppRoute } from '../../const';
+import { Link } from 'react-router-dom';
+import { citiesList } from '../../const';
 
 type LocationsListProps = {
-  cities: string[];
+  cityActive: string;
 }
 
-function LocationsList({cities}: LocationsListProps): JSX.Element {
-  const cityActive = useAppSelector((state) => state.cityActive);
+function LocationsList({ cityActive }: LocationsListProps): JSX.Element {
   const dispatch = useAppDispatch();
 
-  function changeCity (city:string) {
-    const [cityMapActive] = cityMap.filter((item) => item.title === city);
-
+  function changeCity(city: string) {
     dispatch(setCityActive(city));
     dispatch(getOffers());
-    dispatch(setChangeMap(cityMapActive));
+    dispatch(setChangeMap());
   }
 
   return (
     <div className="tabs">
       <section className="locations container">
         <ul className="locations__list tabs__list">
-          {cities.map((city) => {
+          {citiesList.map((city) => {
             const keyValue = city;
             return (
-              <li key = {keyValue} className="locations__item">
-                <a className={`locations__item-link tabs__item ${city === cityActive ? 'tabs__item--active' : ''}`}
-                  onClick={()=>changeCity(city)} href="#"
+              <li key={keyValue} className="locations__item">
+                <Link
+                  className={`locations__item-link tabs__item ${city === cityActive ? 'tabs__item--active' : ''}`}
+                  onClick={() => changeCity(city)}
+                  to={AppRoute.Main}
                 >
                   <span>{city}</span>
-                </a>
+                </Link>
               </li>
             );
           })}

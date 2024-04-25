@@ -4,30 +4,31 @@ import 'leaflet/dist/leaflet.css';
 import useMap from '../../hooks/use-map';
 import { URL_MARKER_DEFAULT, URL_MARKER_CURRENT } from '../../const';
 import { Offer, Offers } from '../../types/offers';
-import { CityMap } from '../../types/city-map';
+import { City } from '../../types/city';
+import './map.css';
 
 type MapProps = {
   mapType: 'cities' | 'offer';
-  city: CityMap;
+  city: City;
   offers: Offers;
-  cardHoverId: Offer['id'] | null;
+  cardHoverId?: Offer['id'] | null;
 }
+
+const defaultCustomIcon = leaflet.icon({
+  iconUrl: URL_MARKER_DEFAULT,
+  iconSize: [27, 39],
+  iconAnchor: [27, 39],
+});
+
+const currentCustomIcon = leaflet.icon({
+  iconUrl: URL_MARKER_CURRENT,
+  iconSize: [27, 39],
+  iconAnchor: [27, 39],
+});
 
 function Map({ mapType, city, offers, cardHoverId }: MapProps) {
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
-
-  const defaultCustomIcon = leaflet.icon({
-    iconUrl: URL_MARKER_DEFAULT,
-    iconSize: [27, 39],
-    iconAnchor: [27, 39],
-  });
-
-  const currentCustomIcon = leaflet.icon({
-    iconUrl: URL_MARKER_CURRENT,
-    iconSize: [27, 39],
-    iconAnchor: [27, 39],
-  });
 
   useEffect(() => {
     if (map) {
@@ -46,25 +47,15 @@ function Map({ mapType, city, offers, cardHoverId }: MapProps) {
 
   useEffect(() => {
     if (map) {
-      map.setView([city.lat, city.lng], city.zoom);
+      map.setView([city.location.latitude, city.location.longitude], city.location.zoom);
     }
   }, [map, city]);
 
   return (
     <section
-      style={mapType === 'offer' ?
-        {
-          height: '100%',
-          minHeight: '500px',
-          width: '100%',
-          minWidth: '1144px',
-          margin: '0, auto'
-        }
-        : {
-          height: '100%'
-        }}
       className={`${mapType}__map map`}
       ref={mapRef}
+      data-testid='map'
     >
     </section>
   );

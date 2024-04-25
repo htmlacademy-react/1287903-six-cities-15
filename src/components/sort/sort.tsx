@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { getSortType, setSortedOffers } from '../../store/action';
 import { useAppDispatch, useAppSelector } from '../../hooks/index';
 import { SortType } from '../../const';
+import { getSortType } from '../../store/offers-process/offers-process.selectors';
+import { setSortType, getOffers } from '../../store/offers-process/offers-process.slice';
 
 function Sort(): JSX.Element {
   const [opened, setOpened] = useState<boolean>(false);
-  const selectedSortType = useAppSelector((state) => state.sortType);
+  const selectedSortType = useAppSelector(getSortType);
   const dispatch = useAppDispatch();
 
   function handleToggle() {
@@ -13,19 +14,15 @@ function Sort(): JSX.Element {
   }
 
   function handleChangeSorting(item: SortType) {
-    dispatch(getSortType(item));
-    dispatch(setSortedOffers());
+    dispatch(setSortType(item));
+    dispatch(getOffers());
     setOpened(false);
   }
 
   return (
     <form className="places__sorting" action="#" method="get">
       <span className="places__sorting-caption">Sort by</span>
-      <span
-        className="places__sorting-type"
-        tabIndex={0}
-        onClick={handleToggle}
-      >
+      <span className="places__sorting-type" tabIndex={0} onClick={handleToggle}>
         {selectedSortType}
         <svg className="places__sorting-arrow" width={7} height={4}>
           <use xlinkHref="#icon-arrow-select" />

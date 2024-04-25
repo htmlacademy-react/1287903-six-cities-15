@@ -1,30 +1,33 @@
 import { Offer } from '../../types/offers';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { handleStars } from '../../const';
+import { useFavorites } from '../../hooks/use-favorites';
+import { FavoritesUpdate } from '../../const';
 
 type PlaceCardProps = {
   placeType: 'cities' | 'near-places';
   offerCard: Offer;
   setCardHoverId?(id: string | null): void;
+  favoritesUpdate: FavoritesUpdate;
 }
 
-function PlaceCard({ placeType, offerCard, setCardHoverId }: PlaceCardProps): JSX.Element {
-  const { title, price, type, isFavorite, id, isPremium, previewImage, rating } = offerCard;
-  const [isFavoriteCard, setFavoriteCard] = useState(isFavorite);
+function PlaceCard({ favoritesUpdate, placeType, offerCard, setCardHoverId }: PlaceCardProps): JSX.Element {
 
   const handleMouseOver = () => {
-    setCardHoverId?.(id);
+    setCardHoverId?.(offerCard.id);
   };
 
   const handleMouseOut = () => {
     setCardHoverId?.(null);
   };
 
-  const handleClick = () => {
-    setFavoriteCard(!isFavoriteCard);
-  };
+  const currentStatus = offerCard.isFavorite ? 0 : 1;
 
+  const onChangeFavorites = useFavorites(
+    String(offerCard.id),
+    currentStatus,
+    favoritesUpdate
+  );
 
   return (
     <article
@@ -32,12 +35,12 @@ function PlaceCard({ placeType, offerCard, setCardHoverId }: PlaceCardProps): JS
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
     >
-      {isPremium && <div className="place-card__mark"><span>Premium</span></div>}
+      {offerCard.isPremium && <div className="place-card__mark"><span>Premium</span></div>}
       <div className={`${placeType}__image-wrapper place-card__image-wrapper`}>
-        <Link to={`/offer/${id}`}>
+        <Link to={`/offer/${offerCard.id}`}>
           <img
             className="place-card__image"
-            src={previewImage}
+            src={offerCard.previewImage}
             width={260}
             height={200}
             alt="Place image"
@@ -47,12 +50,12 @@ function PlaceCard({ placeType, offerCard, setCardHoverId }: PlaceCardProps): JS
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">€{price}</b>
+            <b className="place-card__price-value">€{offerCard.price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
           <button
-            onClick={handleClick}
-            className={`place-card__bookmark-button ${isFavoriteCard ? 'place-card__bookmark-button--active' : ''} button`}
+            onClick={onChangeFavorites}
+            className={`place-card__bookmark-button ${offerCard.isFavorite ? 'place-card__bookmark-button--active' : ''} button`}
             type="button"
           >
             <svg
@@ -67,16 +70,16 @@ function PlaceCard({ placeType, offerCard, setCardHoverId }: PlaceCardProps): JS
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${handleStars(rating)}` }} />
+            <span style={{ width: `${handleStars(offerCard.rating)}` }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`offer/${id}`}>
-            {title}
+          <Link to={`offer/${offerCard.id}`}>
+            {offerCard.title}
           </Link>
         </h2>
-        <p className="place-card__type">{type}</p>
+        <p className="place-card__type">{offerCard.type}</p>
       </div>
     </article>
   );

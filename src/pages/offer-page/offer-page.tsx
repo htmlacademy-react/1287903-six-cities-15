@@ -2,34 +2,44 @@ import { Helmet } from 'react-helmet-async';
 import { useParams, Navigate } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/index';
 import { useEffect } from 'react';
+
+import { AppRoute } from '../../const';
 import Logo from '../../components/logo/logo';
 import ReviewCardList from '../../components/review-card-list/review-card-list';
 import Map from '../../components/map/map';
 import NearPlaceCardList from '../../components/near-place-card-list/near-place-card-list';
 import NavList from '../../components/nav-list/nav-list';
 import Spinner from '../../components/spinner/spinner';
+import { handleStars } from '../../const';
+
 import { store } from '../../store';
 import { fetchOfferAction, fetchReviewsAction, fetchNearOffersAction } from '../../store/api-actions';
-import { AppRoute } from '../../const';
+import { getCity } from '../../store/offers-process/offers-process.selectors';
+import { getOffer, getOfferIsLoading, getOfferIsNotFound } from '../../store/offer-process/offer-process.selectors';
+import { getReviews } from '../../store/reviews-process/reviews-process.selectors';
+import { getNearOffers, getNearOffersIsLoading } from '../../store/near-offers-process/near-offers-process.selectors';
+import { useFavorites } from '../../hooks/use-favorites';
+import { FavoritesUpdate } from '../../const';
 
-const MIN_NEAR_OFFERS_COUNT = 0;
+const MIN_COUNT = 0;
 const MAX_NEAR_OFFERS_COUNT = 3;
+const MAX_IMG_COUNT = 6;
 
 function OfferPage(): JSX.Element {
   const params = useParams();
   const offerId = params.id;
-  const cityMapActive = useAppSelector((state) => state.city);
+  const cityMapActive = useAppSelector(getCity);
 
-  const selectedOffer = useAppSelector((state) => state.offer);
-  const offerIsLoading = useAppSelector((state) => state.offersIsLoading);
-  const offerIsNotFound = useAppSelector((state) => state.offerIsNotFound);
-  const reviewsActive = useAppSelector((state) => state.reviews);
-  const nearOffers = useAppSelector((state) => state.nearOffers);
-  const nearOffersIsLoading = useAppSelector((state) => state.nearOffersIsLoading);
-  const activeNearOffers = nearOffers.slice(MIN_NEAR_OFFERS_COUNT, Math.min(MAX_NEAR_OFFERS_COUNT, nearOffers.length));
+  const selectedOffer = useAppSelector(getOffer);
+  const offerIsLoading = useAppSelector(getOfferIsLoading);
+  const offerIsNotFound = useAppSelector(getOfferIsNotFound);
+  const reviewsActive = useAppSelector(getReviews);
+  const nearOffers = useAppSelector(getNearOffers);
+  const nearOffersIsLoading = useAppSelector(getNearOffersIsLoading);
+  const activeNearOffers = nearOffers.slice(MIN_COUNT, Math.min(MAX_NEAR_OFFERS_COUNT, nearOffers.length));
 
   const nearOfferPlusSelectedOffer = [...activeNearOffers];
-  if(selectedOffer) {
+  if (selectedOffer) {
     nearOfferPlusSelectedOffer.push(selectedOffer);
   }
 
@@ -38,6 +48,13 @@ function OfferPage(): JSX.Element {
     store.dispatch(fetchReviewsAction(offerId));
     store.dispatch(fetchNearOffersAction(offerId));
   }, [offerId]);
+
+  const currentStatus = selectedOffer && selectedOffer.isFavorite ? 0 : 1;
+  const onChangeFavorites = useFavorites(
+    String(offerId),
+    currentStatus,
+    FavoritesUpdate.Offer
+  );
 
   return (
     <div className="page">
@@ -61,15 +78,16 @@ function OfferPage(): JSX.Element {
           <section className="offer">
             <div className="offer__gallery-container container">
               <div className="offer__gallery">
-                {selectedOffer.images
-                  .map((url, id) => {
-                    const keyValue = `${id}-${url}`;
-                    return (
-                      <div key={keyValue} className="offer__image-wrapper">
-                        <img className="offer__image" src={url} alt="Photo studio" />
-                      </div>
-                    );
-                  })}
+                {selectedOffer.images?.length > 0 &&
+                  selectedOffer.images.slice(MIN_COUNT, Math.min(MAX_IMG_COUNT, selectedOffer.images.length))
+                    .map((url, id) => {
+                      const keyValue = `${id}-${url}`;
+                      return (
+                        <div key={keyValue} className="offer__image-wrapper">
+                          <img className="offer__image" src={url} alt="Photo studio" />
+                        </div>
+                      );
+                    })}
               </div>
             </div>
             <div className="offer__container container">
@@ -83,8 +101,12 @@ function OfferPage(): JSX.Element {
                   <h1 className="offer__name">
                     {selectedOffer.title}
                   </h1>
-                  <button className="offer__bookmark-button button" type="button">
-                    <svg className={`offer__bookmark-icon ${selectedOffer.isFavorite ? 'offer__bookmark-button--active' : ''}`} width={31} height={33}>
+                  <button
+                    onClick={onChangeFavorites}
+                    className={`offer__bookmark-button button ${selectedOffer?.isFavorite ? 'offer__bookmark-button--active' : ''}`}
+                    type="button"
+                  >
+                    <svg className="offer__bookmark-icon" width={31} height={33}>
                       <use xlinkHref="#icon-bookmark" />
                     </svg>
                     <span className="visually-hidden">To bookmarks</span>
@@ -92,7 +114,7 @@ function OfferPage(): JSX.Element {
                 </div>
                 <div className="offer__rating rating">
                   <div className="offer__stars rating__stars">
-                    <span style={{ width: '80%' }} />
+                    <span style={{ width: `${handleStars(selectedOffer.rating)}` }} />
                     <span className="visually-hidden">Rating</span>
                   </div>
                   <span className="offer__rating-value rating__value">{selectedOffer.rating}</span>
